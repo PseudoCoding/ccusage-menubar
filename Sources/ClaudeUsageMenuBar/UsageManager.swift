@@ -6,7 +6,7 @@ class UsageManager: ObservableObject {
     @Published var todayInputTokens: Int = 0
     @Published var todayOutputTokens: Int = 0
     @Published var todayCost: Double? = nil
-    @Published var showsTokenCountInMenuBar: Bool = false
+    @Published var menuBarDisplayMode: MenuBarDisplayMode = .cost
     
     @Published var monthInputTokens: Int = 0
     @Published var monthOutputTokens: Int = 0
@@ -31,7 +31,13 @@ class UsageManager: ObservableObject {
            let mode = CostMode(rawValue: savedMode) {
             self.costMode = mode
         }
-        self.showsTokenCountInMenuBar = UserDefaults.standard.bool(forKey: "showsTokenCountInMenuBar")
+        if let savedDisplayMode = UserDefaults.standard.string(forKey: "menuBarDisplayMode"),
+           let displayMode = MenuBarDisplayMode(rawValue: savedDisplayMode) {
+            self.menuBarDisplayMode = displayMode
+        } else if UserDefaults.standard.object(forKey: "showsTokenCountInMenuBar") != nil,
+                  UserDefaults.standard.bool(forKey: "showsTokenCountInMenuBar") {
+            self.menuBarDisplayMode = .tokens
+        }
         
         // Try to load cached values immediately for instant display
         loadCachedValues()
@@ -132,9 +138,9 @@ class UsageManager: ObservableObject {
         }
     }
 
-    func setShowsTokenCountInMenuBar(_ showsTokenCount: Bool) {
-        showsTokenCountInMenuBar = showsTokenCount
-        UserDefaults.standard.set(showsTokenCount, forKey: "showsTokenCountInMenuBar")
+    func setMenuBarDisplayMode(_ displayMode: MenuBarDisplayMode) {
+        menuBarDisplayMode = displayMode
+        UserDefaults.standard.set(displayMode.rawValue, forKey: "menuBarDisplayMode")
     }
 
     var todayTotalTokens: Int {

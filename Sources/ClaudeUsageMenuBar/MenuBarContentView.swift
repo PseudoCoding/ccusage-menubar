@@ -102,11 +102,26 @@ struct MenuBarContentView: View {
             
             // Settings section
             VStack(spacing: 8) {
-                Toggle("Menu Bar Tokens", isOn: Binding(
-                    get: { usageManager.showsTokenCountInMenuBar },
-                    set: { usageManager.setShowsTokenCountInMenuBar($0) }
-                ))
-                .font(.system(size: 12, weight: .medium))
+                HStack {
+                    Text("Menu Bar")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(.secondary)
+
+                    Spacer()
+
+                    Picker("", selection: $usageManager.menuBarDisplayMode) {
+                        ForEach(MenuBarDisplayMode.allCases, id: \.self) { mode in
+                            Text(mode.displayName)
+                                .tag(mode)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .frame(width: 90)
+                    .font(.system(size: 11))
+                    .onChange(of: usageManager.menuBarDisplayMode) { newMode in
+                        usageManager.setMenuBarDisplayMode(newMode)
+                    }
+                }
 
                 // Currency setting
                 HStack {
@@ -122,7 +137,7 @@ struct MenuBarContentView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    .frame(width: 65)
+                    .frame(width: 78)
                     .font(.system(size: 11))
                     .onChange(of: currencyManager.selectedCurrency) { _ in
                         Task {

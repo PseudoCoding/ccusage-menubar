@@ -5,20 +5,8 @@ struct MenuBarLabelView: View {
     @StateObject private var currencyManager = CurrencyManager.shared
     
     var body: some View {
-        if usageManager.showsTokenCountInMenuBar {
-            if usageManager.todayTotalTokens > 0 || !usageManager.isLoading {
-                Text("\(formatTokens(usageManager.todayTotalTokens)) tok")
-                    .font(.system(.caption, design: .monospaced))
-                    .foregroundColor(.primary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-            } else {
-                Text("...")
-                    .font(.system(.caption, design: .monospaced))
-                    .foregroundColor(.secondary)
-            }
-        } else if let todayCost = usageManager.todayCost {
-            Text(currencyManager.formatCurrency(todayCost))
+        if let labelText = menuBarLabelText() {
+            Text(labelText)
                 .font(.system(.caption, design: .monospaced))
                 .foregroundColor(.primary)
                 .lineLimit(1)
@@ -32,6 +20,26 @@ struct MenuBarLabelView: View {
             Text("--")
                 .font(.system(.caption, design: .monospaced))
                 .foregroundColor(.secondary)
+        }
+    }
+
+    private func menuBarLabelText() -> String? {
+        switch usageManager.menuBarDisplayMode {
+        case .cost:
+            guard let todayCost = usageManager.todayCost else {
+                return nil
+            }
+            return currencyManager.formatCurrency(todayCost)
+        case .tokens:
+            if usageManager.todayTotalTokens > 0 || !usageManager.isLoading {
+                return "\(formatTokens(usageManager.todayTotalTokens)) tok"
+            }
+            return nil
+        case .both:
+            guard let todayCost = usageManager.todayCost else {
+                return nil
+            }
+            return "\(currencyManager.formatCurrency(todayCost)) \(formatTokens(usageManager.todayTotalTokens)) tok"
         }
     }
 
