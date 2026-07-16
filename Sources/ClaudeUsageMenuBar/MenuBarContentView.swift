@@ -102,6 +102,12 @@ struct MenuBarContentView: View {
             
             // Settings section
             VStack(spacing: 8) {
+                Toggle("Menu Bar Tokens", isOn: Binding(
+                    get: { usageManager.showsTokenCountInMenuBar },
+                    set: { usageManager.setShowsTokenCountInMenuBar($0) }
+                ))
+                .font(.system(size: 12, weight: .medium))
+
                 // Currency setting
                 HStack {
                     Text("Currency")

@@ -6,6 +6,7 @@ class UsageManager: ObservableObject {
     @Published var todayInputTokens: Int = 0
     @Published var todayOutputTokens: Int = 0
     @Published var todayCost: Double? = nil
+    @Published var showsTokenCountInMenuBar: Bool = false
     
     @Published var monthInputTokens: Int = 0
     @Published var monthOutputTokens: Int = 0
@@ -30,6 +31,7 @@ class UsageManager: ObservableObject {
            let mode = CostMode(rawValue: savedMode) {
             self.costMode = mode
         }
+        self.showsTokenCountInMenuBar = UserDefaults.standard.bool(forKey: "showsTokenCountInMenuBar")
         
         // Try to load cached values immediately for instant display
         loadCachedValues()
@@ -128,6 +130,15 @@ class UsageManager: ObservableObject {
         Task {
             await refreshUsage()
         }
+    }
+
+    func setShowsTokenCountInMenuBar(_ showsTokenCount: Bool) {
+        showsTokenCountInMenuBar = showsTokenCount
+        UserDefaults.standard.set(showsTokenCount, forKey: "showsTokenCountInMenuBar")
+    }
+
+    var todayTotalTokens: Int {
+        todayInputTokens + todayOutputTokens
     }
     
     private func loadUsageDataOptimized() async throws -> UsageStats {
