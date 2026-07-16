@@ -39,7 +39,7 @@ struct MenuBarLabelView: View {
             guard let todayCost = usageManager.todayCost else {
                 return nil
             }
-            return "\(currencyManager.formatCurrency(todayCost)) \(formatTokens(usageManager.todayTotalTokens)) tok"
+            return "\(formatTokens(usageManager.todayTotalTokens)) tok (\(currencyManager.formatCurrency(todayCost)))"
         }
     }
 
