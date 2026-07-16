@@ -31,7 +31,7 @@ struct MenuBarContentView: View {
                         Text("Input")
                             .font(.system(size: 11, weight: .medium))
                             .foregroundColor(.secondary)
-                        Text(formatTokens(usageManager.todayInputTokens))
+                        Text(TokenFormatter.compact(usageManager.todayInputTokens))
                             .font(.system(size: 13, weight: .medium, design: .monospaced))
                             .foregroundColor(.primary)
                     }
@@ -40,7 +40,7 @@ struct MenuBarContentView: View {
                         Text("Output")
                             .font(.system(size: 11, weight: .medium))
                             .foregroundColor(.secondary)
-                        Text(formatTokens(usageManager.todayOutputTokens))
+                        Text(TokenFormatter.compact(usageManager.todayOutputTokens))
                             .font(.system(size: 13, weight: .medium, design: .monospaced))
                             .foregroundColor(.primary)
                     }
@@ -74,7 +74,7 @@ struct MenuBarContentView: View {
                         Text("Input")
                             .font(.system(size: 11, weight: .medium))
                             .foregroundColor(.secondary)
-                        Text(formatTokens(usageManager.monthInputTokens))
+                        Text(TokenFormatter.compact(usageManager.monthInputTokens))
                             .font(.system(size: 13, weight: .medium, design: .monospaced))
                             .foregroundColor(.primary)
                     }
@@ -83,7 +83,7 @@ struct MenuBarContentView: View {
                         Text("Output")
                             .font(.system(size: 11, weight: .medium))
                             .foregroundColor(.secondary)
-                        Text(formatTokens(usageManager.monthOutputTokens))
+                        Text(TokenFormatter.compact(usageManager.monthOutputTokens))
                             .font(.system(size: 13, weight: .medium, design: .monospaced))
                             .foregroundColor(.primary)
                     }
@@ -210,17 +210,7 @@ struct MenuBarContentView: View {
         .frame(width: 280)
     }
     
-    private func formatTokens(_ count: Int) -> String {
-        if count >= 1_000_000 {
-            return String(format: "%.1fM", Double(count) / 1_000_000)
-        } else if count >= 1_000 {
-            return String(format: "%.1fK", Double(count) / 1_000)
-        } else {
-            return "\(count)"
-        }
-    }
-    
-    
+
     private func formatLastUpdated() -> String {
         guard let lastUpdate = usageManager.lastUpdated else {
             return "Never"

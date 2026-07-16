@@ -32,24 +32,14 @@ struct MenuBarLabelView: View {
             return currencyManager.formatCurrency(todayCost)
         case .tokens:
             if usageManager.todayTotalTokens > 0 || !usageManager.isLoading {
-                return "\(formatTokens(usageManager.todayTotalTokens)) tok"
+                return "\(TokenFormatter.compact(usageManager.todayTotalTokens)) tok"
             }
             return nil
         case .both:
             guard let todayCost = usageManager.todayCost else {
                 return nil
             }
-            return "\(formatTokens(usageManager.todayTotalTokens)) tok (\(currencyManager.formatCurrency(todayCost)))"
-        }
-    }
-
-    private func formatTokens(_ count: Int) -> String {
-        if count >= 1_000_000 {
-            return String(format: "%.1fM", Double(count) / 1_000_000)
-        } else if count >= 1_000 {
-            return String(format: "%.1fK", Double(count) / 1_000)
-        } else {
-            return "\(count)"
+            return "\(TokenFormatter.compact(usageManager.todayTotalTokens)) tok (\(currencyManager.formatCurrency(todayCost)))"
         }
     }
 }
